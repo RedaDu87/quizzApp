@@ -4,44 +4,75 @@
     <meta charset="UTF-8">
     <title>Démarrer le Quiz</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
+
+        /* ✨ RESET MOBILE FIRST */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe6f2, #fff7fc);
+            text-align: center;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* --- BOX MOBILE FIRST --- */
         .start-box {
             background: white;
-            padding: 30px;
-            margin: 40px auto;
-            max-width: 600px;
+            width: 100%;
+            max-width: 420px; /* mobile-friendly */
+            padding: 25px 20px;
             border-radius: 25px;
-            box-shadow: 0 10px 20px rgba(255,150,200,0.2);
-            animation: fadeIn 1s ease;
+            box-shadow: 0 10px 20px rgba(255,150,200,0.25);
+            animation: popIn 0.6s ease;
+        }
+
+        .cute-heart {
+            font-size: 45px;
+            animation: floatingHeart 3s infinite ease-in-out;
+            margin-bottom: 12px;
         }
 
         .big-title {
             color: #ff6aa2;
-            font-size: 42px;
-            margin-bottom: 25px;
+            font-size: 26px;
+            margin-bottom: 22px;
+            line-height: 1.3;
             text-shadow: 0 3px 6px rgba(255,120,170,0.3);
-            animation: fadeInUp 0.8s ease;
         }
 
+        /* --- BUTTONS MOBILE FIRST --- */
         .start-btn {
-            display: inline-block;
-            padding: 18px 30px;
-            font-size: 26px;
-            border-radius: 40px;
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border-radius: 18px;
             background: #ff92c2;
             color: white;
             text-decoration: none;
-            margin: 12px;
+
+            margin: 10px 0;
             box-shadow: 0 6px 12px rgba(255,150,200,0.5);
             transition: 0.3s;
         }
 
         .start-btn:hover {
             background: #ff6aa2;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(255,100,170,0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255,100,170,0.55);
         }
 
         .admin-btn {
@@ -51,14 +82,43 @@
 
         .admin-btn:hover {
             background: #61c5ff;
-            box-shadow: 0 10px 20px rgba(110,190,255,0.6);
+            box-shadow: 0 10px 20px rgba(110,190,255,0.55);
         }
 
-        .cute-heart {
-            font-size: 50px;
-            animation: floatingHeart 3s infinite ease-in-out;
-            margin-bottom: 15px;
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes floatingHeart {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        /* --- DESKTOP MODE --- */
+        @media (min-width: 768px) {
+
+            .start-box {
+                max-width: 600px;
+                padding: 40px;
+            }
+
+            .big-title {
+                font-size: 40px;
+            }
+
+            .start-btn {
+                font-size: 24px;
+                padding: 20px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -69,8 +129,6 @@
     <h1 class="big-title">Quiz Réda ❤️ Romaisa</h1>
 
     <a href="/quiz/question" class="start-btn">▶️ Démarrer le Quiz</a>
-
-    <br/>
 
     <a href="/admin/questions" class="start-btn admin-btn">⚙️ Administrer les questions</a>
 </div>

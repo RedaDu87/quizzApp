@@ -5,7 +5,6 @@ import com.quizapp.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,28 +24,14 @@ public class QuestionService {
 
     public List<Question> get20Questions() {
 
-        List<Question> reda = repo.findByOwner("REDA");
-        List<Question> romaisa = repo.findByOwner("ROMAISA");
+        List<Question> all = repo.findAll();
 
-        Collections.shuffle(reda);
-        Collections.shuffle(romaisa);
-
-        // On prend MIN(10, nombre disponible)
-        int limitReda = Math.min(10, reda.size());
-        int limitRomaisa = Math.min(10, romaisa.size());
-
-        reda = reda.subList(0, limitReda);
-        romaisa = romaisa.subList(0, limitRomaisa);
-
-        // Fusion
-        List<Question> all = new ArrayList<>();
-        all.addAll(reda);
-        all.addAll(romaisa);
-
-        // Mélanger
+        // Mélanger tout
         Collections.shuffle(all);
 
-        return all;
-    }
+        // limiter à 20
+        int limit = Math.min(20, all.size());
 
+        return all.subList(0, limit);
+    }
 }

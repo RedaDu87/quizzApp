@@ -15,7 +15,7 @@ public class Question {
     @Id
     private String id;
 
-    private String owner;      // "REDA" ou "ROMAISA"
+
     private String question;
 
     private String option1;

@@ -9,7 +9,6 @@
     <style>
 
         /* 🌸 Mobile First */
-
         body {
             font-family: 'Poppins', Arial, sans-serif;
             padding: 20px;
@@ -19,7 +18,7 @@
         }
 
         .cute-heart {
-            font-size: 35px;
+            font-size: 38px;
             animation: floatingHeart 3s infinite ease-in-out;
             margin-bottom: 15px;
         }
@@ -27,48 +26,56 @@
         h1 {
             font-size: 22px;
             color: #ff6aa2;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             text-shadow: 0 2px 4px rgba(255,120,170,0.3);
-            padding: 0 10px;
         }
 
         .form-box {
             background: white;
-            padding: 20px;
+            padding: 22px;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             margin: auto;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(255,150,200,0.25);
             animation: fadeIn 0.8s ease;
         }
 
+        /* ---------- LABELS ---------- */
         label {
             display: block;
             text-align: left;
-            margin-top: 15px;
-            font-weight: bold;
+            margin-top: 18px;
+            font-weight: 600;
             color: #d84585;
-            font-size: 14px;
+            font-size: 15px;
         }
 
-        input, select {
+        /* ---------- INPUTS & TEXTAREA ---------- */
+        input, textarea {
             width: 100%;
             padding: 14px;
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid #ffd4e8;
             margin-top: 6px;
             background: #fff7fb;
             transition: 0.2s;
             font-size: 16px;
+            resize: vertical; /* textarea mobile-friendly */
         }
 
-        input:focus, select:focus {
+        textarea {
+            min-height: 80px;
+            max-height: 200px;
+        }
+
+        input:focus, textarea:focus {
             border-color: #ff92c2;
             box-shadow: 0 0 8px rgba(255,120,170,0.4);
             outline: none;
         }
 
+        /* ---------- BUTTON ---------- */
         button {
             margin-top: 25px;
             padding: 16px;
@@ -80,7 +87,7 @@
             border-radius: 18px;
             cursor: pointer;
             box-shadow: 0 6px 12px rgba(255,150,200,0.4);
-            transition: 0.3s ease;
+            transition: 0.3s;
         }
 
         button:hover {
@@ -101,9 +108,9 @@
             color: #279fe8;
         }
 
-        /* 🌸 Animations */
+        /* ---------- Animations ---------- */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -113,10 +120,10 @@
             100% { transform: translateY(0); }
         }
 
-        /* 🌸 Version Desktop améliorée */
-        @media (min-width: 768px) {
+        /* -------- Desktop Enhancements -------- */
+        @media (min-width: 780px) {
             h1 { font-size: 28px; }
-            .form-box { padding: 30px; }
+            .form-box { padding: 32px; }
             button { font-size: 20px; }
         }
 
@@ -135,14 +142,8 @@
 
         <input type="hidden" th:field="*{id}" />
 
-        <label>Owner (Réda ou Romaisa)</label>
-        <select th:field="*{owner}">
-            <option value="REDA">Réda</option>
-            <option value="ROMAISA">Romaisa</option>
-        </select>
-
         <label>Question</label>
-        <input type="text" th:field="*{question}" required />
+        <textarea th:field="*{question}" required></textarea>
 
         <label>Option 1</label>
         <input type="text" th:field="*{option1}" required />
@@ -156,11 +157,10 @@
         <label>Option 4</label>
         <input type="text" th:field="*{option4}" required />
 
-        <label>Bonne réponse (0 = option1, 1 = option2...)</label>
+        <label>Bonne réponse (0 = option1, 1 = option2, 2 = option3, 3 = option4)</label>
         <input type="number" min="0" max="3" th:field="*{correctIndex}" required />
 
         <button type="submit">💾 Enregistrer</button>
-
     </form>
 
     <a href="/admin/questions" class="back-btn">⬅ Retour</a>

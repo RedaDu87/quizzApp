@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <title>Gestion des Questions</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
 
-        /* --- RESET MOBILE --- */
+        /* --- RESET MOBILE FIRST --- */
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -19,10 +19,12 @@
             background: linear-gradient(135deg, #ffe6f2, #fff7fc);
             color: #444;
             text-align: center;
+            margin: 0;
         }
 
+        /* --- WRAPPER --- */
         .admin-box {
-            background: white;
+            background: #ffffff;
             padding: 20px;
             border-radius: 25px;
             max-width: 1000px;
@@ -34,7 +36,7 @@
         h1 {
             color: #ff6aa2;
             text-shadow: 0 2px 4px rgba(255,120,170,0.4);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             font-size: 24px;
         }
 
@@ -44,17 +46,17 @@
             margin-bottom: 10px;
         }
 
-        /* ---- BUTTONS ---- */
+        /* --- BUTTONS --- */
 
         .btn-cute {
             display: inline-block;
             padding: 12px 18px;
             background: #ff92c2;
             color: white;
-            border-radius: 20px;
+            border-radius: 18px;
             text-decoration: none;
-            font-size: 16px;
-            margin: 4px;
+            font-size: 15px;
+            margin: 5px 4px;
             box-shadow: 0 6px 12px rgba(255,150,200,0.4);
             transition: 0.3s;
         }
@@ -78,101 +80,124 @@
             background: #ff4f4f;
         }
 
-        /* ---- DESKTOP TABLE ---- */
+        /* --- MOBILE CARDS (mobile-first design) --- */
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 25px;
-            font-size: 16px;
-            display: none; /* hidden on mobile */
-        }
-
-        th {
-            background: #ffd4e8;
-            padding: 15px;
-        }
-
-        td {
-            padding: 12px;
-            background: white;
-            border-bottom: 1px solid #ffe0ef;
-        }
-
-        tr:hover td {
-            background: #fff1fa;
-        }
-
-        /* ---- MOBILE CARDS ---- */
         .question-card {
             background: #ffffff;
             border-radius: 18px;
-            padding: 15px;
+            padding: 18px;
             margin-bottom: 15px;
-            box-shadow: 0 6px 12px rgba(255,150,200,0.25);
             text-align: left;
+            box-shadow: 0 6px 12px rgba(255,150,200,0.25);
             animation: fadeInUp 0.6s ease;
         }
 
         .question-card h3 {
             color: #d84585;
-            font-size: 16px;
+            font-size: 17px;
             margin: 0 0 8px;
+            line-height: 1.3;
         }
 
         .question-card small {
             display: block;
-            color: #999;
+            color: #777;
             margin-bottom: 10px;
+            font-size: 13px;
         }
 
         .actions {
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             gap: 8px;
         }
 
         .actions a {
             flex: 1;
+            text-align: center;
         }
 
-        /* ---- RESPONSIVE ---- */
+        /* --- DESKTOP TABLE (hidden mobile) --- */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            font-size: 16px;
+            display: none; /* hidden by default */
+        }
+
+        table th {
+            background: #ffd4e8;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ffe0ef;
+            background: white;
+        }
+
+        tr:hover td {
+            background: #fff1fa;
+        }
+
+        /* --- MOBILE-FIRST ANIMATIONS --- */
+
+        @keyframes fadeInUp {
+            from {opacity: 0; transform: translateY(12px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes floatingHeart {
+            0%, 100% {transform: translateY(0);}
+            50% {transform: translateY(-8px);}
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        /* --- DESKTOP MODE --- */
         @media (min-width: 768px) {
 
-            .admin-box {
-                padding: 40px;
-            }
+            h1 { font-size: 28px; }
 
-            h1 {
-                font-size: 32px;
+            .admin-box {
+                padding: 35px;
             }
 
             table {
-                display: table;
+                display: table; /* table visible on desktop */
             }
 
             .question-card {
-                display: none;
+                display: none; /* cards hidden desktop */
             }
         }
 
     </style>
 </head>
+
 <body>
 
 <div class="admin-box">
-    <div class="cute-heart">💗</div>
 
+    <div class="cute-heart">💗</div>
     <h1>Gestion des Questions</h1>
 
     <a href="/quiz/start" class="btn-cute btn-blue">▶️ Lancer le Quiz</a>
     <a href="/admin/questions/create" class="btn-cute">➕ Ajouter une question</a>
 
-    <!-- ---------------- MOBILE CARDS ---------------- -->
+    <!-- ---------- MOBILE: CARDS ---------- -->
     <div class="mobile-list">
         <div class="question-card" th:each="q : ${questions}">
             <h3 th:text="${q.question}"></h3>
-            <small>ID: <span th:text="${q.id}"></span> — Owner : <span th:text="${q.owner}"></span></small>
+
+            <small>ID : <span th:text="${q.id}"></span></small>
 
             <div class="actions">
                 <a th:href="@{'/admin/questions/edit/' + ${q.id}}" class="btn-cute btn-blue">✏️ Modifier</a>
@@ -181,23 +206,18 @@
         </div>
     </div>
 
-    <!-- ---------------- DESKTOP TABLE ---------------- -->
+    <!-- ---------- DESKTOP: TABLE ---------- -->
     <table>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Owner</th>
             <th>Question</th>
-            <th>Actions</th>
+            <th style="width:160px;">Actions</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="q : ${questions}">
-            <td th:text="${q.id}"></td>
-            <td th:text="${q.owner}"></td>
             <td th:text="${q.question}"></td>
-
             <td>
                 <a th:href="@{'/admin/questions/edit/' + ${q.id}}" class="btn-cute btn-blue">✏️ Modifier</a>
                 <a th:href="@{'/admin/questions/delete/' + ${q.id}}" class="btn-cute btn-delete">🗑️ Supprimer</a>

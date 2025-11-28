@@ -3,8 +3,8 @@ package com.quizapp.controller;
 import com.quizapp.model.Question;
 import com.quizapp.repository.QuestionRepository;
 import com.quizapp.state.QuizState;
+import com.quizapp.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +16,10 @@ import java.util.*;
 public class QuizController {
 
     @Autowired
-    private QuestionRepository questionRepository;
+    private QuestionService questionService;
 
     @Autowired
     private QuizState quizState;
-
-    @Autowired
-    private SimpMessagingTemplate messaging;
 
     @GetMapping("/start")
     public String start(Model model) {
@@ -32,21 +29,8 @@ public class QuizController {
         quizState.score = 0;
         quizState.answers = new ArrayList<>();
 
-        List<Question> reda = questionRepository.findByOwner("REDA");
-        List<Question> romaisa = questionRepository.findByOwner("ROMAISA");
-
-        Collections.shuffle(reda);
-        Collections.shuffle(romaisa);
-
-        List<Question> qs = new ArrayList<>();
-        qs.addAll(reda.stream().limit(10).toList());
-        qs.addAll(romaisa.stream().limit(10).toList());
-        Collections.shuffle(qs);
-
-        quizState.questions = qs;
-
-        // Broadcast "question 1"
-        messaging.convertAndSend("/topic/progress", quizState.index);
+        // Récupérer 20 questions RANDOM
+        quizState.questions = questionService.get20Questions();
 
         return "quiz/start";
     }
@@ -65,14 +49,8 @@ public class QuizController {
         model.addAttribute("q", q);
         model.addAttribute("num", quizState.index + 1);
 
-        // 🌸 Déterminer le thème
-        String theme = q.getOwner().equalsIgnoreCase("REDA") ? "pink" : "blue";
-        model.addAttribute("theme", theme);
-
         return "quiz/question";
     }
-
-
 
     @PostMapping("/submit")
     public String submit(@RequestParam int answer) {
@@ -89,15 +67,11 @@ public class QuizController {
 
         quizState.index++;
 
-        // 🔥 Notifier tout le monde (passer à question suivante)
-        messaging.convertAndSend("/topic/progress", quizState.index);
-
         if (quizState.index >= quizState.questions.size())
             return "redirect:/quiz/result";
 
         return "redirect:/quiz/question";
     }
-
 
     @GetMapping("/result")
     public String result(Model model) {
