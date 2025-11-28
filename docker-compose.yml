@@ -33,7 +33,7 @@ services:
         - "traefik.enable=true"
 
         # ROUTEUR HTTPS
-        - "traefik.http.routers.quizz.rule=Host(`quizz.${HOST}`)"
+        - "traefik.http.routers.quizz.rule=Host(`quizz.hamsterdeal.ch`)"
         - "traefik.http.routers.quizz.entrypoints=websecure"
 
         # SERVICE PORT
