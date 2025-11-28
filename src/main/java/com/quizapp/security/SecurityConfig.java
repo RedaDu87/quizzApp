@@ -16,17 +16,18 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/", "/quiz/**",
-                                "/admin/**",
+                                "/", "/login", "/quiz/**",
                                 "/css/**", "/js/**", "/audio/**",
-                                "/quiz-ws/**", "/app/**", "/topic/**", "/login"
+                                "/quiz-ws/**", "/app/**", "/topic/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions().disable());
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
 }
+
+
+
 
