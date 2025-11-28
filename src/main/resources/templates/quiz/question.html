@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+
+    <!-- CSS romantique -->
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            font-family: Arial;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* 🌸 Thème Romaisa répond (question de Réda) */
+        .theme-pink {
+            background: #ffe6f4;
+            color: #c2185b;
+        }
+
+        .theme-pink .quiz-box {
+            background: white;
+            border: 2px solid #f48fb1;
+            box-shadow: 0 0 15px rgba(244, 143, 177, 0.5);
+        }
+
+        .theme-pink .answer-btn {
+            background: #f06292;
+            color: white;
+        }
+
+        .theme-pink .answer-btn:hover {
+            background: #ec407a;
+        }
+
+        /* 💙 Thème Réda répond (question de Romaisa) */
+        .theme-blue {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .theme-blue .quiz-box {
+            background: white;
+            border: 2px solid #64b5f6;
+            box-shadow: 0 0 15px rgba(100, 181, 246, 0.5);
+        }
+
+        .theme-blue .answer-btn {
+            background: #42a5f5;
+            color: white;
+        }
+
+        .theme-blue .answer-btn:hover {
+            background: #1e88e5;
+        }
+    </style>
+
+</head>
+<body th:class="'theme-' + ${theme}">
+
+
+<h1>Quiz Réda ❤️ Romaisa</h1>
+
+<div class="quiz-box">
+    <h2>Question [[${num}]] / 20</h2>
+    <h3>[[${q.question}]]</h3>
+
+    <form method="post" action="/quiz/submit">
+        <button class="answer-btn" name="answer" value="0">[[${q.option1}]]</button>
+        <button class="answer-btn" name="answer" value="1">[[${q.option2}]]</button>
+        <button class="answer-btn" name="answer" value="2">[[${q.option3}]]</button>
+        <button class="answer-btn" name="answer" value="3">[[${q.option4}]]</button>
+    </form>
+</div>
+
+<!-- JS animations kawaii -->
+<script src="/js/quiz.js"></script>
+
+<!-- Musique romantique -->
+<audio autoplay loop>
+    <source src="/audio/theme.mp3" type="audio/mpeg">
+</audio>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+    const socket = new SockJS('/quiz-ws');
+    const stomp = Stomp.over(socket);
+
+    stomp.connect({}, function() {
+        stomp.subscribe('/topic/progress', function(msg) {
+            const newIndex = JSON.parse(msg.body);
+
+            // recharger automatiquement quand la question change
+            window.location.href = "/quiz/question";
+        });
+    });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .recap-box {
+            background: white;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(255,150,200,0.2);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .recap-item {
+            text-align: left;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: #fff1fa;
+            border-left: 8px solid #ff92c2;
+            animation: fadeInUp 0.7s ease;
+        }
+
+        .good {
+            border-left-color: #88e390 !important;
+            background: #f0fff3 !important;
+        }
+
+        .bad {
+            border-left-color: #ff7b7b !important;
+            background: #fff0f0 !important;
+        }
+
+        .answer-row {
+            margin-top: 8px;
+        }
+
+        .correct-answer {
+            color: #33aa55;
+            font-weight: bold;
+        }
+
+        .wrong-answer {
+            color: #dd4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Résultats du Quiz</h1>
+
+<div class="quiz-box">
+    <h2>Ton score : [[${score}]] / 20</h2>
+
+    <p th:if="${score} >= 11" style="font-size: 28px; color:#ff6aa2;">
+        🎉 Réda a gagné ! ❤️
+    </p>
+
+    <p th:if="${score} < 11" style="font-size: 28px; color:#ff88bb;">
+        🌸 Romaisa a gagné ! 💕
+    </p>
+
+    <a href="/quiz/start" class="btn">🔁 Rejouer</a>
+    <a href="/admin/questions" class="btn" style="background:#88d1ff;">⚙️ Admin Questions</a>
+</div>
+
+<h2 style="margin-top:40px;">Récapitulatif du Quiz</h2>
+
+<div class="recap-box">
+
+    <div th:each="q, iter : ${questions}"
+         th:class="'recap-item ' + (${userAnswers[iter.index]} == ${q.correctIndex} ? 'good' : 'bad')">
+
+        <h3>
+            Question [[${iter.index + 1}]] : [[${q.question}]]
+        </h3>
+
+        <!-- TA RÉPONSE -->
+        <div class="answer-row">
+            <span>Ta réponse : </span>
+
+            <span th:switch="${userAnswers[iter.index]}">
+
+                <span th:case="0" th:class="${0 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">
+                    [[${q.option1}]]
+                </span>
+
+                <span th:case="1" th:class="${1 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">
+                    [[${q.option2}]]
+                </span>
+
+                <span th:case="2" th:class="${2 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">
+                    [[${q.option3}]]
+                </span>
+
+                <span th:case="3" th:class="${3 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">
+                    [[${q.option4}]]
+                </span>
+
+            </span>
+        </div>
+
+        <!-- BONNE RÉPONSE -->
+        <div class="answer-row">
+            <span>Bonne réponse : </span>
+
+            <span class="correct-answer" th:switch="${q.correctIndex}">
+                <span th:case="0">[[${q.option1}]]</span>
+                <span th:case="1">[[${q.option2}]]</span>
+                <span th:case="2">[[${q.option3}]]</span>
+                <span th:case="3">[[${q.option4}]]</span>
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/quiz.js"></script>
+
+<audio autoplay loop>
+    <source src="/audio/theme.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Démarrer le Quiz</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .start-box {
+            background: white;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 600px;
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(255,150,200,0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        .big-title {
+            color: #ff6aa2;
+            font-size: 42px;
+            margin-bottom: 25px;
+            text-shadow: 0 3px 6px rgba(255,120,170,0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .start-btn {
+            display: inline-block;
+            padding: 18px 30px;
+            font-size: 26px;
+            border-radius: 40px;
+            background: #ff92c2;
+            color: white;
+            text-decoration: none;
+            margin: 12px;
+            box-shadow: 0 6px 12px rgba(255,150,200,0.5);
+            transition: 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #ff6aa2;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(255,100,170,0.6);
+        }
+
+        .admin-btn {
+            background: #88d1ff;
+            box-shadow: 0 6px 12px rgba(140,200,255,0.5);
+        }
+
+        .admin-btn:hover {
+            background: #61c5ff;
+            box-shadow: 0 10px 20px rgba(110,190,255,0.6);
+        }
+
+        .cute-heart {
+            font-size: 50px;
+            animation: floatingHeart 3s infinite ease-in-out;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="start-box">
+    <div class="cute-heart">💕</div>
+
+    <h1 class="big-title">Quiz Réda ❤️ Romaisa</h1>
+
+    <a href="/quiz/question" class="start-btn">▶️ Démarrer le Quiz</a>
+
+    <br/>
+
+    <a href="/admin/questions" class="start-btn admin-btn">⚙️ Administrer les questions</a>
+</div>
+
+<audio autoplay loop>
+    <source src="/audio/theme.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>

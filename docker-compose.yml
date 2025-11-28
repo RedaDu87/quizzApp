@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    image: mongo:6.0
+    volumes:
+      - /var/lib/mongodb_quizz:/data/db
+    networks:
+      - traefik-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  quizzapp:
+    image: anikondu87/quizzapp:latest   # <<< À créer / pousser sur Docker Hub
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_APPLICATION_NAME: quizzApp
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/quizdb
+      SPRING_DATA_MONGODB_DATABASE: quizdb
+      SERVER_PORT: 8080
+      APP_LOGIN_PASSWORD: login2025
+    networks:
+      - traefik-net
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+
+        # ROUTEUR HTTPS
+        - "traefik.http.routers.quizz.rule=Host(`quizz.${HOST}`)"
+        - "traefik.http.routers.quizz.entrypoints=websecure"
+
+        # SERVICE PORT
+        - "traefik.http.services.quizz.loadbalancer.server.port=8080"
+
+networks:
+  traefik-net:
+    external: true

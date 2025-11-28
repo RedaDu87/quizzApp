@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Questions</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+
+        /* --- RESET MOBILE --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffe6f2, #fff7fc);
+            color: #444;
+            text-align: center;
+        }
+
+        .admin-box {
+            background: white;
+            padding: 20px;
+            border-radius: 25px;
+            max-width: 1000px;
+            margin: auto;
+            box-shadow: 0 10px 20px rgba(255,150,200,0.2);
+            animation: fadeIn 0.8s ease;
+        }
+
+        h1 {
+            color: #ff6aa2;
+            text-shadow: 0 2px 4px rgba(255,120,170,0.4);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .cute-heart {
+            font-size: 40px;
+            animation: floatingHeart 3s infinite ease-in-out;
+            margin-bottom: 10px;
+        }
+
+        /* ---- BUTTONS ---- */
+
+        .btn-cute {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #ff92c2;
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px;
+            box-shadow: 0 6px 12px rgba(255,150,200,0.4);
+            transition: 0.3s;
+        }
+
+        .btn-cute:hover {
+            background: #ff6aa2;
+            transform: translateY(-2px);
+        }
+
+        .btn-blue {
+            background: #88d1ff;
+        }
+        .btn-blue:hover {
+            background: #61c5ff;
+        }
+
+        .btn-delete {
+            background: #ff7b7b;
+        }
+        .btn-delete:hover {
+            background: #ff4f4f;
+        }
+
+        /* ---- DESKTOP TABLE ---- */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            font-size: 16px;
+            display: none; /* hidden on mobile */
+        }
+
+        th {
+            background: #ffd4e8;
+            padding: 15px;
+        }
+
+        td {
+            padding: 12px;
+            background: white;
+            border-bottom: 1px solid #ffe0ef;
+        }
+
+        tr:hover td {
+            background: #fff1fa;
+        }
+
+        /* ---- MOBILE CARDS ---- */
+        .question-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 12px rgba(255,150,200,0.25);
+            text-align: left;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .question-card h3 {
+            color: #d84585;
+            font-size: 16px;
+            margin: 0 0 8px;
+        }
+
+        .question-card small {
+            display: block;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .actions a {
+            flex: 1;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (min-width: 768px) {
+
+            .admin-box {
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            table {
+                display: table;
+            }
+
+            .question-card {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="admin-box">
+    <div class="cute-heart">💗</div>
+
+    <h1>Gestion des Questions</h1>
+
+    <a href="/quiz/start" class="btn-cute btn-blue">▶️ Lancer le Quiz</a>
+    <a href="/admin/questions/create" class="btn-cute">➕ Ajouter une question</a>
+
+    <!-- ---------------- MOBILE CARDS ---------------- -->
+    <div class="mobile-list">
+        <div class="question-card" th:each="q : ${questions}">
+            <h3 th:text="${q.question}"></h3>
+            <small>ID: <span th:text="${q.id}"></span> — Owner : <span th:text="${q.owner}"></span></small>
+
+            <div class="actions">
+                <a th:href="@{'/admin/questions/edit/' + ${q.id}}" class="btn-cute btn-blue">✏️ Modifier</a>
+                <a th:href="@{'/admin/questions/delete/' + ${q.id}}" class="btn-cute btn-delete">🗑️</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ---------------- DESKTOP TABLE ---------------- -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Owner</th>
+            <th>Question</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="q : ${questions}">
+            <td th:text="${q.id}"></td>
+            <td th:text="${q.owner}"></td>
+            <td th:text="${q.question}"></td>
+
+            <td>
+                <a th:href="@{'/admin/questions/edit/' + ${q.id}}" class="btn-cute btn-blue">✏️ Modifier</a>
+                <a th:href="@{'/admin/questions/delete/' + ${q.id}}" class="btn-cute btn-delete">🗑️ Supprimer</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
