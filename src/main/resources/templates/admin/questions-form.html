@@ -8,98 +8,94 @@
 
     <style>
 
-        /* 🌸 Mobile First */
+        /* 🌸 Mobile First — ultra resserré */
         body {
             font-family: 'Poppins', Arial, sans-serif;
-            padding: 20px;
+            padding: 12px;
             margin: 0;
             background: linear-gradient(135deg, #ffe6f2, #fff7fc);
             text-align: center;
         }
 
         .cute-heart {
-            font-size: 38px;
+            font-size: 32px;
             animation: floatingHeart 3s infinite ease-in-out;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 18px;
             color: #ff6aa2;
-            margin-bottom: 22px;
+            margin-bottom: 15px;
             text-shadow: 0 2px 4px rgba(255,120,170,0.3);
+            padding: 0 5px;
         }
 
         .form-box {
             background: white;
-            padding: 22px;
+            padding: 15px;
             width: 100%;
-            max-width: 520px;
+            max-width: 380px;      /* 💥 Parfait pour mobile */
             margin: auto;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(255,150,200,0.25);
+            border-radius: 18px;
+            box-shadow: 0 6px 16px rgba(255,150,200,0.25);
             animation: fadeIn 0.8s ease;
         }
 
-        /* ---------- LABELS ---------- */
         label {
             display: block;
             text-align: left;
-            margin-top: 18px;
+            margin-top: 12px;
             font-weight: 600;
             color: #d84585;
-            font-size: 15px;
+            font-size: 13px;
         }
 
-        /* ---------- INPUTS & TEXTAREA ---------- */
         input, textarea {
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             border: 1px solid #ffd4e8;
-            margin-top: 6px;
+            margin-top: 5px;
             background: #fff7fb;
             transition: 0.2s;
-            font-size: 16px;
-            resize: vertical; /* textarea mobile-friendly */
+            font-size: 14px;
         }
 
         textarea {
-            min-height: 80px;
-            max-height: 200px;
+            min-height: 60px;
+            max-height: 150px;
         }
 
         input:focus, textarea:focus {
             border-color: #ff92c2;
-            box-shadow: 0 0 8px rgba(255,120,170,0.4);
+            box-shadow: 0 0 6px rgba(255,120,170,0.4);
             outline: none;
         }
 
-        /* ---------- BUTTON ---------- */
         button {
-            margin-top: 25px;
-            padding: 16px;
+            margin-top: 18px;
+            padding: 12px;
             width: 100%;
             border: none;
             background: #ff92c2;
             color: white;
-            font-size: 18px;
-            border-radius: 18px;
+            font-size: 16px;
+            border-radius: 14px;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(255,150,200,0.4);
+            box-shadow: 0 5px 10px rgba(255,150,200,0.4);
             transition: 0.3s;
         }
 
         button:hover {
             background: #ff6aa2;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255,100,170,0.5);
+            transform: translateY(-2px);
         }
 
         .back-btn {
             display: inline-block;
-            margin-top: 20px;
-            font-size: 16px;
+            margin-top: 15px;
+            font-size: 14px;
             color: #61c5ff;
             text-decoration: none;
         }
@@ -116,15 +112,15 @@
 
         @keyframes floatingHeart {
             0% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
             100% { transform: translateY(0); }
         }
 
-        /* -------- Desktop Enhancements -------- */
+        /* -------- Desktop -------- */
         @media (min-width: 780px) {
-            h1 { font-size: 28px; }
-            .form-box { padding: 32px; }
-            button { font-size: 20px; }
+            .form-box { max-width: 460px; padding: 25px; }
+            h1 { font-size: 26px; }
+            button { font-size: 18px; }
         }
 
     </style>
@@ -157,7 +153,7 @@
         <label>Option 4</label>
         <input type="text" th:field="*{option4}" required />
 
-        <label>Bonne réponse (0 = option1, 1 = option2, 2 = option3, 3 = option4)</label>
+        <label>Bonne réponse (0 à 3)</label>
         <input type="number" min="0" max="3" th:field="*{correctIndex}" required />
 
         <button type="submit">💾 Enregistrer</button>
