@@ -9,9 +9,7 @@
     <style>
 
         /* --- RESET MOBILE FIRST --- */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -21,12 +19,50 @@
             color: #c2185b;
             text-align: center;
             animation: fadeIn 0.7s ease;
+            overflow-x: hidden;
         }
 
         h1 {
             margin-top: 10px;
             font-size: 26px;
             text-shadow: 0 3px 6px rgba(200, 50, 100, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- BRAVO --- */
+        .bravo {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.2);
+            font-size: 90px;
+            font-weight: 900;
+            color: #ff2e72;
+            text-shadow: 0 0 20px rgba(255,0,120,0.6);
+            opacity: 0;
+            animation: bravoPop 3s ease-in-out forwards;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        @keyframes bravoPop {
+            0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+            15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            30%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+        }
+
+        /* --- FIREWORKS CANVAS --- */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
         }
 
         /* --- SCORE BOX --- */
@@ -39,6 +75,8 @@
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(255,150,200,0.25);
             animation: popIn 0.6s ease;
+            position: relative;
+            z-index: 10;
         }
 
         .quiz-box h2 {
@@ -72,6 +110,8 @@
             max-width: 700px;
             margin: 20px auto;
             padding: 15px;
+            z-index: 10;
+            position: relative;
         }
 
         .recap-item {
@@ -81,90 +121,38 @@
             border-radius: 16px;
             border-left: 8px solid #ff92c2;
             margin-bottom: 16px;
-
             box-shadow: 0 4px 12px rgba(255,150,200,0.15);
             animation: fadeInUp 0.6s ease;
         }
 
-        .good {
-            border-left-color: #88e390 !important;
-            background: #f0fff3 !important;
-        }
+        .good { background: #f0fff3 !important; border-left-color: #88e390 !important; }
+        .bad  { background: #fff0f0 !important; border-left-color: #ff7b7b !important; }
 
-        .bad {
-            border-left-color: #ff7b7b !important;
-            background: #fff0f0 !important;
-        }
+        .recap-item h3 { font-size: 16px; margin-bottom: 10px; }
+        .answer-row { margin-top: 6px; font-size: 14px; }
 
-        .recap-item h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
+        .correct-answer { color: #33aa55; font-weight: bold; }
+        .wrong-answer   { color: #dd4444; font-weight: bold; }
 
-        .answer-row {
-            margin-top: 6px;
-            font-size: 14px;
-        }
-
-        .correct-answer {
-            color: #33aa55;
-            font-weight: bold;
-        }
-
-        .wrong-answer {
-            color: #dd4444;
-            font-weight: bold;
-        }
-
-        /* --- ANIMATIONS --- */
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to   {opacity: 1;}
-        }
-
-        @keyframes fadeInUp {
-            from {opacity: 0; transform: translateY(12px);}
-            to   {opacity: 1; transform: translateY(0);}
-        }
-
-        @keyframes popIn {
-            from {transform: scale(0.9); opacity: 0;}
-            to   {transform: scale(1); opacity: 1;}
-        }
-
-        /* --- DESKTOP MODE --- */
-        @media (min-width: 768px) {
-            h1 { font-size: 34px; }
-
-            .quiz-box {
-                padding: 30px;
-            }
-
-            .quiz-box h2 {
-                font-size: 26px;
-            }
-
-            .btn {
-                font-size: 18px;
-                padding: 16px;
-            }
-
-            .recap-item h3 { font-size: 18px; }
-            .answer-row { font-size: 16px; }
-        }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes fadeInUp { from {opacity: 0; transform: translateY(12px);} to {opacity: 1; transform: translateY(0);} }
+        @keyframes popIn { from {transform: scale(0.9); opacity: 0;} to {transform: scale(1); opacity: 1;} }
 
     </style>
 </head>
 
 <body>
 
+<!-- GROS BRAVO -->
+<div class="bravo">🎉 BRAVO !! 🎉</div>
+
+<!-- CANVAS FEUX D'ARTIFICE -->
+<canvas id="fireworksCanvas"></canvas>
+
 <h1>Résultats du Quiz</h1>
 
 <div class="quiz-box">
     <h2>Ton score : [[${score}]] / 20</h2>
-
-
-
     <a href="/quiz/start" class="btn">🔁 Rejouer</a>
     <a href="/admin/questions" class="btn" style="background:#88d1ff;">⚙️ Admin Questions</a>
 </div>
@@ -181,10 +169,8 @@
             Question [[${iter.index + 1}]] : [[${q.question}]]
         </h3>
 
-        <!-- TA RÉPONSE -->
         <div class="answer-row">
             <span>Ta réponse : </span>
-
             <span th:switch="${userAnswers[iter.index]}">
                 <span th:case="0" th:class="${0 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">[[${q.option1}]]</span>
                 <span th:case="1" th:class="${1 == q.correctIndex} ? 'correct-answer' : 'wrong-answer'">[[${q.option2}]]</span>
@@ -193,7 +179,6 @@
             </span>
         </div>
 
-        <!-- BONNE RÉPONSE -->
         <div class="answer-row">
             <span>Bonne réponse : </span>
             <span class="correct-answer" th:switch="${q.correctIndex}">
@@ -211,6 +196,56 @@
 <audio autoplay>
     <source src="/audio/victory-chime-366449.mp3" type="audio/mpeg">
 </audio>
+
+<!-- FIREWORKS SCRIPT -->
+<script>
+    const canvas = document.getElementById("fireworksCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function random(min, max) { return Math.random() * (max - min) + min; }
+
+    function createFirework(x, y) {
+        const count = 80;
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count;
+            const speed = random(2, 6);
+            particles.push({
+                x, y,
+                dx: Math.cos(angle) * speed,
+                dy: Math.sin(angle) * speed,
+                alpha: 1,
+                size: random(2, 4),
+                color: `hsl(${random(0,360)},100%,60%)`
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach((p, i) => {
+            p.x += p.dx;
+            p.y += p.dy;
+            p.alpha -= 0.01;
+            if (p.alpha <= 0) { particles.splice(i, 1); }
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    setInterval(() => {
+        createFirework(random(100, canvas.width - 100), random(50, 300));
+    }, 700);
+
+    animate();
+</script>
 
 </body>
 </html>
