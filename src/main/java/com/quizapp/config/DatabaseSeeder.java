@@ -25,6 +25,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
 
         System.out.println(">>> Populating MongoDB with REAL romantic quiz data... 💗");
+
         saveMixed(
                 "Quand et où vous êtes-vous rencontrés ? / ¿Cuándo y dónde se conocieron?",
                 "En ligne sur une application de rencontre / En línea en una aplicación de citas",
@@ -59,7 +60,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Quel est le dernier film que vous avez vu ensemble ? / ¿Cuál es la última película que han visto juntos?",
-                "Aucun encore / Todavía ninguno",
+                "Aucun encore / Todavía ninguna",
                 "Un film d’horreur / Una película de terror",
                 "Une comédie romantique / Una comedia romántica",
                 "Un documentaire / Un documental"
@@ -163,9 +164,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Réda a-t-il rendu visite à Romaisa ? / ¿Ha visitado Réda a Romaisa?",
-                "Pas encore",
-                "Oui, une fois",
                 "Oui, plusieurs fois",
+                "Oui, une fois",
+                "Non",
                 "Il y vit"
         );
 
@@ -194,7 +195,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         );
 
         saveMixed(
-                "Quelle était la profession de Réda ? / ¿Cuál era la profesión de Réda?",
+                "Quelle était la profession de Réda ? / ¿Cuál es la profesión de Réda?",
                 "Ingénieur logiciel",
                 "Professeur",
                 "Médecin",
@@ -267,7 +268,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Qui sont les frères et sœurs de Romaisa ? / ¿Quiénes son los hermanos de Romaisa?",
-                "Aimane, Chaima, Brahim, Fatema",
+                "Aiman, Chaima, Brahim, Fatima",
                 "Un seul frère",
                 "Deux sœurs",
                 "Aucun"
@@ -291,7 +292,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Quand et où vous êtes-vous rencontrés pour la première fois ? / ¿Cuándo y dónde se conocieron por primera vez?",
-                "Le 7 octobre 2025 via une application",
+                "Via une application",
                 "À l’université",
                 "Dans un café",
                 "À un mariage"
@@ -555,17 +556,17 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Réda a-t-il des frères et sœurs ? / ¿Tiene Réda hermanos?",
-                "3 frères/sœurs",
-                "2",
-                "1",
+                "1 frère/ 2 sœurs",
+                "2sœurs/ 4 frères",
+                "1 frère",
                 "Aucun"
         );
 
         saveMixed(
                 "Romaisa a-t-elle des frères et sœurs ? / ¿Tiene Romaisa hermanos?",
                 "4 frères/sœurs",
-                "2",
-                "1",
+                "2sœurs/1 frère",
+                "1 frère",
                 "Aucun"
         );
 
@@ -618,35 +619,19 @@ public class DatabaseSeeder implements CommandLineRunner {
         );
 
         saveMixed(
-                "Quel type de musique aime-t-il/elle ? / ¿Qué tipo de música le gusta?",
-                "Musique spirituelle",
-                "Pop",
-                "Classique",
-                "Rap"
-        );
-
-        saveMixed(
-                "Quel est son artiste préféré ? / ¿Artista favorito?",
-                "Artiste marocain",
-                "Artiste espagnol",
-                "Artiste international",
-                "Aucun"
-        );
-
-        saveMixed(
                 "Quelle est la taille de Réda ? / ¿Estatura de Réda?",
-                "1m80",
+                "1m96",
                 "1m75",
                 "1m70",
-                "1m85"
+                "1m86"
         );
 
         saveMixed(
                 "Quelle est la taille de Romaisa ? / ¿Estatura de Romaisa?",
+                "1m75",
                 "1m65",
-                "1m70",
                 "1m60",
-                "1m75"
+                "1m85"
         );
 
         saveMixed(
@@ -707,15 +692,15 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Où avez-vous passé votre dernier week-end ensemble ? / ¿Último fin de semana juntos?",
-                "Chez l’un de vous",
+                "Pas encore d’occasion",
                 "À la mer",
                 "À la montagne",
-                "Pas encore d’occasion"
+                "À Zurich"
         );
 
         saveMixed(
                 "Quelle marque de téléphone utilise Réda ? / ¿Qué marca usa Réda?",
-                "Samsung",
+                "Redmi",
                 "iPhone",
                 "Huawei",
                 "Xiaomi"
@@ -730,12 +715,21 @@ public class DatabaseSeeder implements CommandLineRunner {
         );
 
         saveMixed(
-                "Quelle série regarde-t-il/elle en ce moment ? / ¿Qué serie está viendo?",
-                "Série turque",
+                "Quelle série regarde Réda en ce moment ? / ¿Qué serie está viendo Réda?",
+                "The Simpsons",
                 "Série espagnole",
                 "Série américaine",
                 "Ne regarde pas de séries"
         );
+
+        saveMixed(
+                "Quelle série regarde Romaisa en ce moment ? / ¿Qué serie está viendo Romaisa?",
+                "Aucune série en ce moment ",
+                "Série espagnole",
+                "Futurama",
+                "Ne regarde pas de séries"
+        );
+
 
         saveMixed(
                 "Qui fait les courses ? / ¿Quién hace las compras?",
@@ -755,9 +749,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Dormez-vous du même côté du lit ? / ¿Duermen del mismo lado de la cama?",
-                "Oui",
-                "Non",
                 "Pas encore",
+                "Non",
+                "Oui",
                 "On change souvent"
         );
 
@@ -787,17 +781,17 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "Quelle est la date prévue du mariage civil ? / ¿Fecha prevista de la boda civil?",
-                "Mars",
+                "Date à confirmer",
                 "Avril",
                 "Mai",
-                "Date à confirmer"
+                "Février"
         );
 
         saveMixed(
                 "Qui seront vos témoins ? / ¿Quiénes serán sus testigos?",
-                "Père de Romaisa",
+                "Pas encore décidé",
+                "Pére de Romaisa",
                 "Mère de Réda",
-                "Amis proches",
                 "Pas encore décidé"
         );
 
@@ -811,10 +805,10 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         saveMixed(
                 "À quelle fréquence voyez-vous la famille de votre partenaire ? / ¿Con qué frecuencia ven a su familia?",
-                "Régulièrement",
+                "Cela dépend",
                 "Une fois par mois",
                 "Rarement",
-                "Cela dépend"
+                "Régulièrement"
         );
 
         saveMixed(
@@ -823,6 +817,143 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "Anniversaire",
                 "Aid",
                 "Nouvel an"
+        );
+
+        saveMixed(
+                "Qui a choisi la date du mariage ? / ¿Quién eligió la fecha de la boda?",
+                "Los dos",
+                "Familia de Romaisa",
+                "Familia de Reda",
+                "Los vecinos"
+
+        );
+
+        saveMixed(
+                "Où avez-vous acheté les alliances ? / ¿Dónde compraron los anillos de boda?",
+                "Aún no los tenemos",
+                "En una joyería local",
+                "Por internet",
+                "En mercadillo"
+        );
+
+        saveMixed(
+                "Connaissez-vous la pointure de chaussures de votre partenaire ? / ¿Conocen la talla de zapatos de su pareja?",
+                "Reda 46 / Romaisa 41",
+                "Reda 44 / Romaisa 39",
+                "Reda 42 / Romaisa 40",
+                "Reda 45 / Romaisa 38"
+        );
+
+        saveMixed(
+                "Votre partenaire a-t-il un tatouage ou une cicatrice ? / ¿Su pareja tiene algún tatuaje o cicatriz?",
+                "Reda: cicatriz en el ombligo / Romaisa: cicatriz en la rodilla",
+                "Reda:cicatriz en el brazo/ Romaisa: cicatriz en la mano",
+                "Reda: ninguna marca / Romaisa: marca en la muñeca",
+                "Ninguno tiene una marca"
+        );
+
+        saveMixed(
+                "Qui se lève en premier le matin ? / ¿Quién se levanta primero por la mañana?",
+                "Los dos",
+                "Reda",
+                "Romaisa",
+                "Depende del día"
+        );
+
+        saveMixed(
+                "À quelle heure votre partenaire se couche-t-il/elle ? / ¿A qué hora se acuesta su pareja?",
+                "23h",
+                "21h",
+                "00h",
+                "18h30"
+        );
+
+        saveMixed(
+                "Quel est son parfum ou déodorant habituel ? / ¿Cuál es su perfume o desodorante habitual?",
+                "Reda: Hugo Boss / Axe — Romaisa: Valentino / Dove",
+                "Reda: Sauvage/ Old Spice— Romaisa: Lâncome/ Nivea",
+                "Reda: Hugo Boss/Chanel — Romaisa:Valentino/ Rexona",
+                "Reda: Emporio Armani/Axe — Romaisa: Yves Saint Laurent/Dove"
+        );
+
+        saveMixed(
+                "Qui conduit habituellement lorsque vous sortez ? / ¿Quién conduce normalmente cuando salen?",
+                "Los dos por igual",
+                "Siempre Reda",
+                "Siempre Romaisa",
+                "No conducimos"
+        );
+
+        saveMixed(
+                "Avez-vous un animal de compagnie ? / ¿Tienen una mascota?",
+                "Romaisa tiene el gato michi",
+                "Un pez",
+                "Un canario",
+                "No tenemos mascotas"
+        );
+
+        saveMixed(
+                "Qui s’occupe le plus des tâches administratives ? / ¿Quién se encarga más de los trámites administrativos?",
+                "Romaisa",
+                "Reda",
+                "Un familiar",
+                "Entre los dos"
+        );
+
+        saveMixed(
+                "Quel est le deuxième prénom de votre partenaire ? / ¿Cuál es el segundo nombre de su pareja?",
+                "No tenemos",
+                "Él tiene uno pero ella no",
+                "Ella tiene uno pero él no",
+                "Ambos tienen segundo nombre"
+        );
+
+        saveMixed(
+                "Quel est son plat détesté ? / ¿Cuál es la comida que menos le gusta?",
+                "Reda: couscous con pasas / Romaisa: las sopas",
+                "Reda: pescado / Romaisa: arroz",
+                "Reda: verduras / Romaisa: pollo",
+                "Reda: pasta / Romaisa: mariscos"
+        );
+
+        saveMixed(
+                "Quel est son dessert préféré ? / ¿Cuál es su postre favorito?",
+                "Reda: éclair de chocolate / Romaisa: tiramisu",
+                "Reda: flan / Romaisa: cheesecake",
+                "Reda: éclair de chocolate / Romaisa: brownie",
+                "Reda: helado / Romaisa: tiramisu"
+        );
+
+        saveMixed(
+                "Quels sont les projets de vacances que vous avez ensemble ? / ¿Qué planes de vacaciones tienen juntos?",
+                "Viajar a un nuevo país",
+                "Visitar a la familia",
+                "No viajar nunca",
+                "Ir a Kuala Lumpur"
+        );
+
+        saveMixed(
+                "Qui choisit les destinations de voyage ? / ¿Quién elige los destinos de viaje?",
+                "A turnos",
+                "Siempre Reda",
+                "Siempre Romaisa",
+                "La agencia de viajes"
+        );
+
+        saveMixed(
+                "Quand votre partenaire est-il/elle tombé(e) malade pour la dernière fois ? / ¿Cuándo fue la última vez que su pareja estuvo enferma?",
+                "Reda: resfriado en 2024 / Romaisa: el verano pasado",
+                "Reda: el verano pasado/ Romaisa: en 2023",
+                "Reda: resfriado en 2000/ Romaisa: en 2021",
+                "Nunca nos hemos resfriado"
+        );
+
+        saveMixed(
+                "Quel est son numéro de téléphone par cœur ? / ¿Se saben de memoria el número de teléfono de su pareja?",
+                "Reda:+41767150083 / Romaisa : +34632069431",
+                "Reda:+41672500184/ Romaisa: +34632069470",
+                "No tenemos número de teléfono",
+                "Reda:+41767150081/ Romaisa:+34632069437"
         );
 
 
