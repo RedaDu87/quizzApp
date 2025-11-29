@@ -51,7 +51,8 @@
             font-size: 13px;
         }
 
-        input, textarea {
+        input[type="text"],
+        textarea {
             width: 100%;
             padding: 10px;
             border-radius: 10px;
@@ -71,6 +72,20 @@
             border-color: #ff92c2;
             box-shadow: 0 0 6px rgba(255,120,170,0.4);
             outline: none;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding: 6px 0;
+        }
+
+        .answer-row input[type="radio"] {
+            transform: scale(1.25);
+            accent-color: #ff6aa2;
+            cursor: pointer;
         }
 
         button {
@@ -141,20 +156,33 @@
         <label>Question</label>
         <textarea th:field="*{question}" required></textarea>
 
+        <!-- OPTION 1 -->
         <label>Option 1</label>
-        <input type="text" th:field="*{option1}" required />
+        <div class="answer-row">
+            <input type="radio" name="correctIndex" value="0" th:checked="${question.correctIndex == 0}">
+            <input type="text" th:field="*{option1}" required />
+        </div>
 
+        <!-- OPTION 2 -->
         <label>Option 2</label>
-        <input type="text" th:field="*{option2}" required />
+        <div class="answer-row">
+            <input type="radio" name="correctIndex" value="1" th:checked="${question.correctIndex == 1}">
+            <input type="text" th:field="*{option2}" required />
+        </div>
 
+        <!-- OPTION 3 -->
         <label>Option 3</label>
-        <input type="text" th:field="*{option3}" required />
+        <div class="answer-row">
+            <input type="radio" name="correctIndex" value="2" th:checked="${question.correctIndex == 2}">
+            <input type="text" th:field="*{option3}" required />
+        </div>
 
+        <!-- OPTION 4 -->
         <label>Option 4</label>
-        <input type="text" th:field="*{option4}" required />
-
-        <label>Bonne réponse (0 à 3)</label>
-        <input type="number" min="0" max="3" th:field="*{correctIndex}" required />
+        <div class="answer-row">
+            <input type="radio" name="correctIndex" value="3" th:checked="${question.correctIndex == 3}">
+            <input type="text" th:field="*{option4}" required />
+        </div>
 
         <button type="submit">💾 Enregistrer</button>
     </form>
