@@ -77,6 +77,26 @@
             transform: translateY(-2px);
         }
 
+        /* --- BUTTON RETOUR --- */
+        .back-start {
+            margin-top: 18px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #88d1ff;
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(136, 209, 255, 0.4);
+            transition: 0.3s ease;
+        }
+
+        .back-start:hover {
+            background: #61c5ff;
+            transform: translateY(-2px);
+        }
+
         /* --- ANIMATIONS --- */
         @keyframes fadeIn {
             from {opacity: 0;}
@@ -101,7 +121,7 @@
             h2 { font-size: 22px; }
             h3 { font-size: 20px; }
 
-            .answer-btn {
+            .answer-btn, .back-start {
                 font-size: 18px;
             }
         }
@@ -123,6 +143,10 @@
         <button class="answer-btn" name="answer" value="2">[[${q.option3}]]</button>
         <button class="answer-btn" name="answer" value="3">[[${q.option4}]]</button>
     </form>
+
+    <!-- 🌟 Nouveau bouton : Retour au début -->
+    <a href="/quiz/start" class="back-start">⬅️ Revenir au début</a>
+
 </div>
 
 <!-- JS animations kawaii -->
