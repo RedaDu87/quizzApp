@@ -42,7 +42,14 @@ public class RoomService {
         Optional<Room> roomOpt = roomRepository.findByRoomCode(roomCode);
         if (roomOpt.isPresent()) {
             Room room = roomOpt.get();
-            if (!room.isStarted() && !room.getPlayerNames().contains(playerName)) {
+            
+            // Allow rejoining if player is already in the room
+            if (room.getPlayerNames().contains(playerName)) {
+                return Optional.of(room);
+            }
+            
+            // Only add new players if room hasn't started yet
+            if (!room.isStarted()) {
                 room.getPlayerNames().add(playerName);
                 
                 // Initialize player score

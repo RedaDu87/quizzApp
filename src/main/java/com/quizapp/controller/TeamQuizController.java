@@ -67,10 +67,16 @@ public class TeamQuizController {
         Room room = roomOpt.get();
         
         // If playerName provided, join the room
-        if (playerName != null && !playerName.isEmpty()) {
-            Optional<Room> joinedRoom = roomService.joinRoom(roomCode, playerName);
+        if (playerName != null && !playerName.trim().isEmpty()) {
+            // Sanitize player name - remove HTML tags and limit length
+            String sanitizedName = playerName.replaceAll("<[^>]*>", "").trim();
+            if (sanitizedName.length() > 20) {
+                sanitizedName = sanitizedName.substring(0, 20);
+            }
+            
+            Optional<Room> joinedRoom = roomService.joinRoom(roomCode, sanitizedName);
             if (joinedRoom.isPresent()) {
-                session.setAttribute("playerName", playerName);
+                session.setAttribute("playerName", sanitizedName);
                 session.setAttribute("currentRoomCode", roomCode);
                 room = joinedRoom.get();
             } else {
