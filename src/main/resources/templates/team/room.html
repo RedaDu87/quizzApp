@@ -437,6 +437,8 @@
 
     function updateTurnIndicator(state) {
         const indicator = document.getElementById('turnIndicator');
+        if (!indicator) return; // Skip if quiz not started yet
+        
         if (state.currentTurnPlayer === playerName) {
             indicator.className = 'turn-indicator your-turn';
             indicator.textContent = '✅ C\'est votre tour de répondre !';
