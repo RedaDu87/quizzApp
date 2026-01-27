@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Salle de Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .room-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .room-code {
+            font-size: 32px;
+            font-weight: 800;
+            color: #667eea;
+            letter-spacing: 2px;
+        }
+
+        .share-link {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .players-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .player-badge {
+            padding: 8px 16px;
+            background: #edf2f7;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .player-badge.active {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .quiz-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .waiting-message {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .waiting-message h2 {
+            font-size: 28px;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .start-btn {
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .answer-option {
+            width: 100%;
+            padding: 20px;
+            margin: 12px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 17px;
+            font-weight: 500;
+            text-align: left;
+            color: #2d3748;
+        }
+
+        .answer-option:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .answer-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .answer-option.correct {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border-color: #38a169;
+        }
+
+        .answer-option.wrong {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+            border-color: #f56565;
+        }
+
+        .turn-indicator {
+            padding: 12px;
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #c53030;
+        }
+
+        .turn-indicator.your-turn {
+            background: #f0fff4;
+            border-left-color: #48bb78;
+            color: #22543d;
+        }
+
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            height: 600px;
+        }
+
+        .chat-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding-right: 8px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .chat-message.own {
+            background: #e6fffa;
+            border-left: 3px solid #38b2ac;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .message-text {
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #5568d3;
+        }
+
+        .scores-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-section {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="room-header">
+        <div>
+            <div class="room-code" th:text="${room.roomCode}">ABC123</div>
+            <div class="share-link">
+                Lien d'invitation: <strong th:text="${'http://localhost:8080/team/join/' + room.roomCode}"></strong>
+            </div>
+        </div>
+        <div class="players-info">
+            <span th:each="player : ${room.playerNames}" 
+                  th:classappend="${player == room.currentTurnPlayer} ? 'active' : ''"
+                  class="player-badge" 
+                  th:text="${player}">Player</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="quiz-section">
+            <div id="waitingSection" th:if="${!room.started}">
+                <div class="waiting-message">
+                    <h2>⏳ En attente...</h2>
+                    <p style="color: #718096; margin-bottom: 24px;">
+                        En attente que l'hôte démarre le quiz
+                    </p>
+                    <div th:if="${isCreator}">
+                        <button class="start-btn" onclick="startQuiz()">🚀 Démarrer le Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quizSection" th:if="${room.started}" style="display: none;">
+                <div id="turnIndicator" class="turn-indicator">
+                    En attente...
+                </div>
+                
+                <div class="question-header">
+                    <span class="question-number" id="questionNumber">Question 1/20</span>
+                </div>
+
+                <h3 class="question-text" id="questionText">Chargement...</h3>
+
+                <div id="answersContainer"></div>
+
+                <div class="scores-section" id="scoresSection">
+                    <h4 style="margin-bottom: 12px; color: #2d3748;">📊 Scores</h4>
+                    <div id="scoresList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div class="chat-header">💬 Chat</div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Envoyer un message..." onkeypress="handleChatKeypress(event)">
+                <button class="send-btn" onclick="sendMessage()">Envoyer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const roomCode = /*[[${room.roomCode}]]*/ 'ABC123';
+    const playerName = /*[[${playerName}]]*/ 'Player';
+    const isCreator = /*[[${isCreator}]]*/ false;
+    let roomState = /*[[${room}]]*/ {};
+    let pollInterval;
+
+    // Start polling for room updates
+    function startPolling() {
+        pollInterval = setInterval(updateRoomState, 2000);
+    }
+
+    async function updateRoomState() {
+        try {
+            const response = await fetch(`/team/state/${roomCode}`);
+            const data = await response.json();
+            if (data.success) {
+                const newState = data.room;
+                
+                // Check if quiz started
+                if (newState.started && !roomState.started) {
+                    document.getElementById('waitingSection').style.display = 'none';
+                    document.getElementById('quizSection').style.display = 'block';
+                }
+                
+                // Update question if changed
+                if (newState.started && newState.currentQuestionIndex !== roomState.currentQuestionIndex) {
+                    updateQuestion(newState);
+                }
+                
+                // Update turn indicator
+                updateTurnIndicator(newState);
+                
+                // Update scores
+                updateScores(newState);
+                
+                // Update chat
+                updateChat(newState);
+                
+                roomState = newState;
+            }
+        } catch (error) {
+            console.error('Error updating room state:', error);
+        }
+    }
+
+    function updateQuestion(state) {
+        const question = state.questions[state.currentQuestionIndex];
+        document.getElementById('questionNumber').textContent = `Question ${state.currentQuestionIndex + 1}/20`;
+        document.getElementById('questionText').textContent = question.question;
+        
+        const answersContainer = document.getElementById('answersContainer');
+        answersContainer.innerHTML = '';
+        
+        const options = [question.option1, question.option2, question.option3, question.option4];
+        options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.className = 'answer-option';
+            button.textContent = option;
+            button.onclick = () => submitAnswer(index);
+            
+            // Disable if not player's turn
+            if (state.currentTurnPlayer !== playerName) {
+                button.disabled = true;
+            }
+            
+            answersContainer.appendChild(button);
+        });
+    }
+
+    function updateTurnIndicator(state) {
+        const indicator = document.getElementById('turnIndicator');
+        if (!indicator) return; // Skip if quiz not started yet
+        
+        if (state.currentTurnPlayer === playerName) {
+            indicator.className = 'turn-indicator your-turn';
+            indicator.textContent = '✅ C\'est votre tour de répondre !';
+        } else {
+            indicator.className = 'turn-indicator';
+            indicator.textContent = `⏳ Tour de ${state.currentTurnPlayer}...`;
+        }
+    }
+
+    function updateScores(state) {
+        const scoresList = document.getElementById('scoresList');
+        scoresList.innerHTML = '';
+        
+        state.playerScores.forEach(ps => {
+            const item = document.createElement('div');
+            item.className = 'score-item';
+            item.innerHTML = `
+                <span>${ps.playerName}</span>
+                <span style="color: #667eea;">${ps.score} points</span>
+            `;
+            scoresList.appendChild(item);
+        });
+    }
+
+    function updateChat(state) {
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        state.chatMessages.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'chat-message' + (msg.playerName === playerName ? ' own' : '');
+            div.innerHTML = `
+                <div class="message-sender">${msg.playerName}</div>
+                <div class="message-text">${msg.message}</div>
+            `;
+            chatMessages.appendChild(div);
+        });
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function startQuiz() {
+        try {
+            const response = await fetch(`/team/start/${roomCode}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                await updateRoomState();
+            } else {
+                alert(data.error || 'Impossible de démarrer le quiz');
+            }
+        } catch (error) {
+            console.error('Error starting quiz:', error);
+            alert('Erreur lors du démarrage du quiz');
+        }
+    }
+
+    async function submitAnswer(answerIndex) {
+        try {
+            const formData = new FormData();
+            formData.append('answerIndex', answerIndex);
+            
+            const response = await fetch(`/team/answer/${roomCode}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                await updateRoomState();
+            } else {
+                alert("Ce n'est pas votre tour de répondre");
+            }
+        } catch (error) {
+            console.error('Error submitting answer:', error);
+            alert('Erreur lors de la soumission de la réponse');
+        }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        
+        if (message) {
+            const formData = new FormData();
+            formData.append('message', message);
+            
+            await fetch(`/team/chat/${roomCode}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            input.value = '';
+            await updateRoomState();
+        }
+    }
+
+    function handleChatKeypress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    // Initialize
+    if (roomState.started) {
+        document.getElementById('waitingSection').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'block';
+        updateQuestion(roomState);
+        updateTurnIndicator(roomState);
+        updateScores(roomState);
+    }
+    
+    updateChat(roomState);
+    startPolling();
+</script>
+</body>
+</html>

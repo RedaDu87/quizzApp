@@ -26,6 +26,8 @@ public class AuthFilter implements Filter {
                 path.startsWith("/css") ||
                 path.startsWith("/js") ||
                 path.startsWith("/audio") ||
+                path.startsWith("/team") ||
+                path.startsWith("/ws") ||
                 path.equals("/")) {
 
             chain.doFilter(request, response);

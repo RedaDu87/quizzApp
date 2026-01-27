@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         /* ✨ RESET MOBILE FIRST */
         *, *::before, *::after {
@@ -16,73 +17,100 @@
         body {
             margin: 0;
             padding: 20px;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ffe6f2, #fff7fc);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             text-align: center;
             min-height: 100vh;
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             animation: fadeIn 0.8s ease;
+            background-attachment: fixed;
         }
 
-        /* --- BOX MOBILE FIRST --- */
+        /* --- BOX MOBILE FIRST - Glassmorphism --- */
         .start-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             width: 100%;
-            max-width: 420px; /* mobile-friendly */
-            padding: 25px 20px;
-            border-radius: 25px;
-            box-shadow: 0 10px 20px rgba(255,150,200,0.25);
+            max-width: 480px;
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             animation: popIn 0.6s ease;
         }
 
-        .cute-heart {
-            font-size: 45px;
-            animation: floatingHeart 3s infinite ease-in-out;
-            margin-bottom: 12px;
+        .hero-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
         }
 
         .big-title {
-            color: #ff6aa2;
-            font-size: 26px;
-            margin-bottom: 22px;
-            line-height: 1.3;
-            text-shadow: 0 3px 6px rgba(255,120,170,0.3);
+            color: #1a202c;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
         }
 
-        /* --- BUTTONS MOBILE FIRST --- */
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* --- BUTTONS MOBILE FIRST - Modern Design --- */
         .start-btn {
             display: block;
             width: 100%;
-            padding: 16px;
-            font-size: 18px;
-            border-radius: 18px;
-            background: #ff92c2;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
-
-            margin: 10px 0;
-            box-shadow: 0 6px 12px rgba(255,150,200,0.5);
-            transition: 0.3s;
+            margin: 12px 0;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .start-btn:hover {
-            background: #ff6aa2;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255,100,170,0.55);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        .team-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .team-btn:hover {
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
         }
 
         .admin-btn {
-            background: #88d1ff;
-            box-shadow: 0 6px 12px rgba(140,200,255,0.5);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
         }
 
         .admin-btn:hover {
-            background: #61c5ff;
-            box-shadow: 0 10px 20px rgba(110,190,255,0.55);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+        }
+
+        .btn-icon {
+            margin-right: 8px;
         }
 
         /* --- ANIMATIONS --- */
@@ -96,25 +124,32 @@
             to   { transform: scale(1); opacity: 1; }
         }
 
-        @keyframes floatingHeart {
+        @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
+            50% { transform: translateY(-10px); }
         }
 
         /* --- DESKTOP MODE --- */
         @media (min-width: 768px) {
-
             .start-box {
-                max-width: 600px;
-                padding: 40px;
+                max-width: 550px;
+                padding: 50px 40px;
+            }
+
+            .hero-icon {
+                font-size: 80px;
             }
 
             .big-title {
-                font-size: 40px;
+                font-size: 42px;
+            }
+
+            .subtitle {
+                font-size: 18px;
             }
 
             .start-btn {
-                font-size: 24px;
+                font-size: 18px;
                 padding: 20px;
             }
         }
@@ -124,13 +159,22 @@
 <body>
 
 <div class="start-box">
-    <div class="cute-heart">💕</div>
+    <div class="hero-icon">🎯</div>
 
-    <h1 class="big-title">Quiz Réda ❤️ Romaisa</h1>
+    <h1 class="big-title">QuizzApp Pro</h1>
+    <p class="subtitle">Testez vos connaissances et défiez vos amis</p>
 
-    <a href="/quiz/question" class="start-btn">▶️ Démarrer le Quiz</a>
+    <a href="/quiz/question" class="start-btn">
+        <span class="btn-icon">▶️</span>Jouer Solo
+    </a>
 
-    <a href="/admin/questions" class="start-btn admin-btn">⚙️ Administrer les questions</a>
+    <a href="/team/rooms" class="start-btn team-btn">
+        <span class="btn-icon">👥</span>Jouer en Équipe
+    </a>
+
+    <a href="/admin/questions" class="start-btn admin-btn">
+        <span class="btn-icon">⚙️</span>Administration
+    </a>
 </div>
 
 <!--<audio autoplay loop>-->
