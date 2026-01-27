@@ -412,11 +412,16 @@
     }
 
     function updateQuestion(state) {
-        const question = state.questions[state.currentQuestionIndex];
-        document.getElementById('questionNumber').textContent = `Question ${state.currentQuestionIndex + 1}/20`;
-        document.getElementById('questionText').textContent = question.question;
-        
+        const questionNumber = document.getElementById('questionNumber');
+        const questionText = document.getElementById('questionText');
         const answersContainer = document.getElementById('answersContainer');
+        
+        if (!questionNumber || !questionText || !answersContainer) return; // Skip if elements don't exist
+        
+        const question = state.questions[state.currentQuestionIndex];
+        questionNumber.textContent = `Question ${state.currentQuestionIndex + 1}/20`;
+        questionText.textContent = question.question;
+        
         answersContainer.innerHTML = '';
         
         const options = [question.option1, question.option2, question.option3, question.option4];
@@ -450,17 +455,21 @@
 
     function updateScores(state) {
         const scoresList = document.getElementById('scoresList');
+        if (!scoresList) return; // Skip if quiz not started yet
+        
         scoresList.innerHTML = '';
         
-        state.playerScores.forEach(ps => {
-            const item = document.createElement('div');
-            item.className = 'score-item';
-            item.innerHTML = `
-                <span>${ps.playerName}</span>
-                <span style="color: #667eea;">${ps.score} points</span>
-            `;
-            scoresList.appendChild(item);
-        });
+        if (state.playerScores && Array.isArray(state.playerScores)) {
+            state.playerScores.forEach(ps => {
+                const item = document.createElement('div');
+                item.className = 'score-item';
+                item.innerHTML = `
+                    <span>${escapeHtml(ps.playerName)}</span>
+                    <span style="color: #667eea;">${ps.score} points</span>
+                `;
+                scoresList.appendChild(item);
+            });
+        }
     }
 
     function updateChat(state) {
