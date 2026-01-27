@@ -481,25 +481,39 @@
     }
 
     async function startQuiz() {
-        const response = await fetch(`/team/start/${roomCode}`, { method: 'POST' });
-        const data = await response.json();
-        if (data.success) {
-            await updateRoomState();
+        try {
+            const response = await fetch(`/team/start/${roomCode}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                await updateRoomState();
+            } else {
+                alert(data.error || 'Impossible de démarrer le quiz');
+            }
+        } catch (error) {
+            console.error('Error starting quiz:', error);
+            alert('Erreur lors du démarrage du quiz');
         }
     }
 
     async function submitAnswer(answerIndex) {
-        const formData = new FormData();
-        formData.append('answerIndex', answerIndex);
-        
-        const response = await fetch(`/team/answer/${roomCode}`, {
-            method: 'POST',
-            body: formData
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            await updateRoomState();
+        try {
+            const formData = new FormData();
+            formData.append('answerIndex', answerIndex);
+            
+            const response = await fetch(`/team/answer/${roomCode}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                await updateRoomState();
+            } else {
+                alert("Ce n'est pas votre tour de répondre");
+            }
+        } catch (error) {
+            console.error('Error submitting answer:', error);
+            alert('Erreur lors de la soumission de la réponse');
         }
     }
 

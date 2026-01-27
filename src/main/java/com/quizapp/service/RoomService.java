@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
+    private static final int QUIZ_QUESTIONS_COUNT = 20;
+    
     private final RoomRepository roomRepository;
     private final QuestionService questionService;
     private final Random random = new Random();
@@ -105,12 +107,15 @@ public class RoomService {
             int nextPlayerIndex = (currentPlayerIndex + 1) % room.getPlayerNames().size();
             room.setCurrentTurnPlayer(room.getPlayerNames().get(nextPlayerIndex));
             
-            // Move to next question after all players answered
+            // Move to next question after all players answered current question
+            int currentIndex = room.getCurrentQuestionIndex();
             boolean allAnswered = room.getPlayerScores().stream()
-                .allMatch(ps -> ps.getAnswers().size() > room.getCurrentQuestionIndex());
+                .allMatch(ps -> ps.getAnswers().size() > currentIndex);
             
-            if (allAnswered && room.getCurrentQuestionIndex() < 19) {
-                room.setCurrentQuestionIndex(room.getCurrentQuestionIndex() + 1);
+            if (allAnswered && currentIndex < QUIZ_QUESTIONS_COUNT - 1) {
+                room.setCurrentQuestionIndex(currentIndex + 1);
+                // Reset turn to first player for new question
+                room.setCurrentTurnPlayer(room.getPlayerNames().get(0));
             }
             
             return Optional.of(roomRepository.save(room));
@@ -131,16 +136,20 @@ public class RoomService {
 
     public List<Room> getAllRooms() {
         return roomRepository.findAll().stream()
-            .filter(room -> !room.isStarted() || room.getCurrentQuestionIndex() < 20)
+            .filter(room -> !room.isStarted() || room.getCurrentQuestionIndex() < QUIZ_QUESTIONS_COUNT)
             .collect(Collectors.toList());
     }
 
     private String generateRoomCode() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder code = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            code.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return code.toString();
+        String code;
+        do {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                sb.append(chars.charAt(random.nextInt(chars.length())));
+            }
+            code = sb.toString();
+        } while (roomRepository.findByRoomCode(code).isPresent());
+        return code;
     }
 }

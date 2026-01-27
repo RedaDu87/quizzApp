@@ -32,8 +32,22 @@ public class TeamQuizController {
     @PostMapping("/create")
     @ResponseBody
     public Map<String, Object> createRoom(@RequestParam String playerName, HttpSession session) {
-        Room room = roomService.createRoom(playerName);
-        session.setAttribute("playerName", playerName);
+        // Validate and sanitize player name
+        if (playerName == null || playerName.trim().isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", "Player name cannot be empty");
+            return response;
+        }
+        
+        // Sanitize player name - remove HTML tags and limit length
+        String sanitizedName = playerName.replaceAll("<[^>]*>", "").trim();
+        if (sanitizedName.length() > 20) {
+            sanitizedName = sanitizedName.substring(0, 20);
+        }
+        
+        Room room = roomService.createRoom(sanitizedName);
+        session.setAttribute("playerName", sanitizedName);
         session.setAttribute("currentRoomCode", room.getRoomCode());
         
         Map<String, Object> response = new HashMap<>();
@@ -88,10 +102,26 @@ public class TeamQuizController {
 
     @PostMapping("/start/{roomCode}")
     @ResponseBody
-    public Map<String, Object> startRoom(@PathVariable String roomCode) {
-        Optional<Room> room = roomService.startRoom(roomCode);
+    public Map<String, Object> startRoom(@PathVariable String roomCode, HttpSession session) {
+        String playerName = (String) session.getAttribute("playerName");
+        Optional<Room> roomOpt = roomService.getRoomByCode(roomCode);
+        
         Map<String, Object> response = new HashMap<>();
-        response.put("success", room.isPresent());
+        if (roomOpt.isEmpty()) {
+            response.put("success", false);
+            response.put("error", "Room not found");
+            return response;
+        }
+        
+        Room room = roomOpt.get();
+        if (!room.getCreatorName().equals(playerName)) {
+            response.put("success", false);
+            response.put("error", "Only the room creator can start the quiz");
+            return response;
+        }
+        
+        Optional<Room> startedRoom = roomService.startRoom(roomCode);
+        response.put("success", startedRoom.isPresent());
         return response;
     }
 
@@ -123,14 +153,26 @@ public class TeamQuizController {
                                                @RequestParam String message,
                                                HttpSession session) {
         String playerName = (String) session.getAttribute("playerName");
+        Map<String, Object> response = new HashMap<>();
+        
         if (playerName == null) {
-            Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             return response;
         }
         
-        Optional<Room> room = roomService.addChatMessage(roomCode, playerName, message);
-        Map<String, Object> response = new HashMap<>();
+        // Validate and sanitize message
+        if (message == null || message.trim().isEmpty()) {
+            response.put("success", false);
+            response.put("error", "Message cannot be empty");
+            return response;
+        }
+        
+        String sanitizedMessage = message.replaceAll("<[^>]*>", "").trim();
+        if (sanitizedMessage.length() > 500) {
+            sanitizedMessage = sanitizedMessage.substring(0, 500);
+        }
+        
+        Optional<Room> room = roomService.addChatMessage(roomCode, playerName, sanitizedMessage);
         response.put("success", room.isPresent());
         return response;
     }
