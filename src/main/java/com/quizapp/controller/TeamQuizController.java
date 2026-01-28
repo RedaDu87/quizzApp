@@ -24,7 +24,12 @@ public class TeamQuizController {
     }
 
     @GetMapping("/rooms")
-    public String showRooms(Model model) {
+    public String showRooms(Model model, HttpSession session) {
+        // Check authentication
+        if (session.getAttribute("AUTH") == null) {
+            return "redirect:/login";
+        }
+        
         model.addAttribute("rooms", roomService.getAllRooms());
         return "team/rooms";
     }
@@ -32,9 +37,17 @@ public class TeamQuizController {
     @PostMapping("/create")
     @ResponseBody
     public Map<String, Object> createRoom(@RequestParam String playerName, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // Check authentication
+        if (session.getAttribute("AUTH") == null) {
+            response.put("success", false);
+            response.put("error", "Authentication required");
+            return response;
+        }
+        
         // Validate and sanitize player name
         if (playerName == null || playerName.trim().isEmpty()) {
-            Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("error", "Player name cannot be empty");
             return response;
@@ -50,7 +63,6 @@ public class TeamQuizController {
         session.setAttribute("playerName", sanitizedName);
         session.setAttribute("currentRoomCode", room.getRoomCode());
         
-        Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("roomCode", room.getRoomCode());
         return response;
@@ -59,6 +71,11 @@ public class TeamQuizController {
     @GetMapping("/room/{roomCode}")
     public String showRoom(@PathVariable String roomCode, @RequestParam(required = false) String playerName, 
                           Model model, HttpSession session) {
+        // Check authentication
+        if (session.getAttribute("AUTH") == null) {
+            return "redirect:/login";
+        }
+        
         Optional<Room> roomOpt = roomService.getRoomByCode(roomCode);
         if (roomOpt.isEmpty()) {
             return "redirect:/team/rooms?error=notfound";
@@ -68,9 +85,15 @@ public class TeamQuizController {
         
         // If playerName provided, join the room
         if (playerName != null && !playerName.isEmpty()) {
-            Optional<Room> joinedRoom = roomService.joinRoom(roomCode, playerName);
+            // Sanitize player name
+            String sanitizedName = playerName.replaceAll("<[^>]*>", "").trim();
+            if (sanitizedName.length() > 20) {
+                sanitizedName = sanitizedName.substring(0, 20);
+            }
+            
+            Optional<Room> joinedRoom = roomService.joinRoom(roomCode, sanitizedName);
             if (joinedRoom.isPresent()) {
-                session.setAttribute("playerName", playerName);
+                session.setAttribute("playerName", sanitizedName);
                 session.setAttribute("currentRoomCode", roomCode);
                 room = joinedRoom.get();
             } else {
@@ -91,7 +114,12 @@ public class TeamQuizController {
     }
 
     @GetMapping("/join/{roomCode}")
-    public String showJoinPage(@PathVariable String roomCode, Model model) {
+    public String showJoinPage(@PathVariable String roomCode, Model model, HttpSession session) {
+        // Check authentication
+        if (session.getAttribute("AUTH") == null) {
+            return "redirect:/login";
+        }
+        
         Optional<Room> roomOpt = roomService.getRoomByCode(roomCode);
         if (roomOpt.isEmpty()) {
             return "redirect:/team/rooms?error=notfound";

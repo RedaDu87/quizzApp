@@ -25,7 +25,9 @@ public class LoginController {
 
         if (password != null && password.equals(appPassword)) {
             session.setAttribute("AUTH", true);
-            return "redirect:/quiz/start";
+            
+            // Redirect to team rooms after successful login
+            return "redirect:/team/rooms";
         }
 
         model.addAttribute("error", "Mot de passe incorrect");
