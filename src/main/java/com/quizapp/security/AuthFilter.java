@@ -21,12 +21,11 @@ public class AuthFilter implements Filter {
 
         boolean isLogged = req.getSession().getAttribute("AUTH") != null;
 
-        // URLs publiques
+        // URLs publiques (sans authentification)
         if (path.startsWith("/login") ||
                 path.startsWith("/css") ||
                 path.startsWith("/js") ||
                 path.startsWith("/audio") ||
-                path.startsWith("/team") ||
                 path.startsWith("/ws") ||
                 path.equals("/")) {
 
@@ -34,8 +33,8 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Protection des pages quiz et admin
-        if ((path.startsWith("/quiz") || path.startsWith("/admin")) && !isLogged) {
+        // Protection des pages quiz, admin et team - nécessitent authentification
+        if ((path.startsWith("/quiz") || path.startsWith("/admin") || path.startsWith("/team")) && !isLogged) {
             res.sendRedirect("/login");
             return;
         }
